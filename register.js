@@ -1,4 +1,5 @@
 require('dotenv').config();
+const _ = require('lodash');
 const axios = require('axios');
 const winston = require('winston');
 
@@ -17,10 +18,15 @@ plateNumber = process.argv[2] || process.env.PLATE_NUMBER;
 kioskAgentId = process.env.KIOSK_AGENT_ID;
 password = process.env.PASSWORD;
 parkingProductId = process.env.PARKING_PRODUCT_ID;
-logger.info(`Parking car...`, {plateNumber: plateNumber, kioskAgentId: kioskAgentId, parkingProductId: parkingProductId});
+logger.info(`Parking car...`, {
+    plateNumber: plateNumber,
+    kioskAgentId: kioskAgentId,
+    parkingProductId: parkingProductId
+});
 
+const pserviceKioskV2BaseUrl = "https://pservice-permit.giantleap.no/api/kiosk-v2";
 axios.post(
-    'https://pservice-permit.giantleap.no/api/kiosk-v2/authenticate.json',
+    `${pserviceKioskV2BaseUrl}/authenticate.json`,
     {userName: kioskAgentId, password: password}
 ).then((resAuth) => {
     let token;
@@ -29,7 +35,7 @@ axios.post(
         logger.debug("", resAuth.data);
         token = resAuth.data.token;
         axios.post(
-            'https://pservice-permit.giantleap.no/api/kiosk-v2/parking/register.json',
+            `${pserviceKioskV2BaseUrl}/parking/register.json`,
             {
                 plateNumber: plateNumber,
                 kioskAgentId: kioskAgentId,
@@ -40,7 +46,20 @@ axios.post(
             {headers: {"X-Token": token}}
         ).then((res) => {
             if (res.data.resultCode === "SUCCESS") {
-                logger.info(`Successfully added ${res.data.parking.licencePlateNumber} to the parking app.`);
+                logger.info(
+                    `Successfully parked.`,
+                    _.pick(
+                        res.data.parking,
+                        [
+                            'licencePlateNumber',
+                            'startTime',
+                            'endTime',
+                            'agentId',
+                            'productId',
+                            'zoneName'
+                        ]
+                    )
+                )
                 logger.debug("", res.data)
             } else {
                 logger.error(`Failed to add ${plateNumber}!!!`, res.data);

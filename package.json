@@ -1,5 +1,5 @@
 {
-  "name": "parking",
+  "name": "pservice-parking",
   "version": "1.0.0",
   "description": "",
   "main": "register.js",
@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.19.1",
     "dotenv": "^8.2.0",
+    "lodash": "^4.17.15",
     "winston": "^3.2.1"
   }
 }
