@@ -31,6 +31,12 @@ Create `<filename>.command` (`.command` extension is important here) with the fo
 cd "$(dirname "$0")" 
 
 node register.js
+
+# Keep the tab open until user input. 
+# Necessary to see the output of the script.
+# Otherwise iTerm closes the window automatically.
+echo "Click enter to exit"
+read
 ```
 
 Add execute permissions to the script with `chmod +x <filename>.command`
