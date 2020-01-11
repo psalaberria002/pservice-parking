@@ -23,6 +23,20 @@ The argument takes precedence over the environment variable.
 
 `node register.js <PLATE_NUMBER>`.
 
+### Double-click executable MacOS
+
+Create `<filename>.command` (`.command` extension is important here) with the following content:
+```bash
+#!/bin/bash
+cd "$(dirname "$0")" 
+
+node register.js
+```
+
+Add execute permissions to the script with `chmod +x <filename>.command`
+
+You can double-click the file, and it will be executed by the Terminal.app.
+
 ## Debugging
 
 The log level can be set with the LOG_LEVEL environment variable.

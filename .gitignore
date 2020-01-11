@@ -1,3 +1,6 @@
+# Shell scripts which are executed with Terminal.app
+*.command
+
 # Logs
 logs
 *.log
